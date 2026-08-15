@@ -17,8 +17,11 @@ export const goodsFromServer: GoodsFromServer[] = [
   'Garlic',
 ];
 
-const SORT_NAME = 'name';
-const SORT_LENGTH = 'length';
+enum SortType {
+  NAME = 'name',
+  LENGTH = 'length',
+  NONE = '',
+}
 
 interface FilterParams {
   sortField: string;
@@ -34,10 +37,10 @@ function getPreparedGoods(
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case SORT_NAME:
+        case SortType.NAME:
           return good1.localeCompare(good2);
 
-        case SORT_LENGTH:
+        case SortType.LENGTH:
           return good1.length - good2.length;
 
         default:
@@ -62,7 +65,7 @@ export const App = () => {
     isReversed,
   });
 
-  const reset = () => {
+  const resetFilters = () => {
     setSortField('');
     setIsReversed(false);
   };
@@ -73,9 +76,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': sortField !== SORT_NAME,
+            'is-light': sortField !== SortType.NAME,
           })}
-          onClick={() => setSortField(SORT_NAME)}
+          onClick={() => setSortField(SortType.NAME)}
         >
           Sort alphabetically
         </button>
@@ -83,9 +86,9 @@ export const App = () => {
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': sortField !== SORT_LENGTH,
+            'is-light': sortField !== SortType.LENGTH,
           })}
-          onClick={() => setSortField(SORT_LENGTH)}
+          onClick={() => setSortField(SortType.LENGTH)}
         >
           Sort by length
         </button>
@@ -102,7 +105,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={reset}
+            onClick={resetFilters}
           >
             Reset
           </button>
